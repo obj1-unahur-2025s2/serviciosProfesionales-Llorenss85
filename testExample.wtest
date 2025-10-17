@@ -1,9 +1,86 @@
-import example.pepita
+import profesional.*
+import empresaDeServicio.*
+import universidad.*
+import tipoProfesional.*
+import provincias.*
 
-describe "group of tests for pepita" {
 
-  test "pepita has initial energy" {
-    assert.equals(100, pepita.energy())
+
+describe "etapa 1" {
+  //UNIVERSIDAD
+  const uniSanMartin=new Universidad(provincia=buenosAires,honorario=3500)
+  const uniRosario=new Universidad(provincia=santaFe,honorario=2800)
+  const uniCorrientes=new Universidad(provincia=corrientes, honorario=4200)
+  const uniHurlingham=new Universidad(provincia=buenosAires)
+  //clases tipos  profesionales 
+  const rocioLibre= new ProfesionalesLibre(honorario=5000)
+  const juanaVinculada=new ProfesionalVinculadoUniversidad(universidad=uniSanMartin)
+  const melinaAsociada=new ProfesionalAsociadoLitoral()
+  const lucianaLibre=new ProfesionalesLibre(honorario=3200)
+  //profesionales
+  const juana=new Profesional(tipoProfesional=juanaVinculada, universidadEstudiada=uniRosario)
+  const melina =new Profesional(tipoProfesional=melinaAsociada,universidadEstudiada=uniCorrientes)
+  const rocio =new Profesional(tipoProfesional=rocioLibre,universidadEstudiada=uniCorrientes)
+  const luciana=new Profesional(tipoProfesional=lucianaLibre,universidadEstudiada=uniRosario)
+
+  test "juana estudió en rosario" {
+
+    assert.equals(juana.universidad(),uniRosario)
   }
 
+  test "melina tiene honorario de 3000" {
+
+    assert.equals(melina.honorarios(),3000)
+  }
+  test "rocío trabaja en 3 provincias" {
+    /*
+    rocioLibre.asignarHonorario(5000)
+    rocioLibre.asignarProvincia(santaFe)
+    rocioLibre.asignarProvincia(cordoba)
+    rocioLibre.asignarProvincia(buenosAires)
+    */
+
+    assert.that(rocio.provinciasDeTrabajo().size()==3)
+  }
+  test "luciana sus honorarios son de 3200 pesos"{
+    /*
+    lucianaLibre.asignarHonorario(3200)
+    lucianaLibre.asignarProvincia(santaFe)
+    lucianaLibre.asignarProvincia(entreRios)
+    */
+    assert.that(luciana.honorarios()==3200)
+
+  }
+
+  method initialize() {
+    //rocio
+    rocioLibre.asignarHonorario(5000)
+    rocioLibre.asignarProvincia(santaFe)
+    rocioLibre.asignarProvincia(cordoba)
+    rocioLibre.asignarProvincia(buenosAires)
+    //luciana
+    lucianaLibre.asignarHonorario(3200)
+    lucianaLibre.asignarProvincia(santaFe)
+    lucianaLibre.asignarProvincia(entreRios)
+    unaEmpresa.contratar(rocio)
+    unaEmpresa.contratar(luciana)
+    unaEmpresa.contratar(pepe)
+    unaEmpresa.contratar(juana)
+  }
+  //EMPRESA
+  const unaEmpresa=new Empresa(honorarios=3500)
+  const pepeLibre = new ProfesionalesLibre(universidad=uniSanMartin,honorario=3200)
+  const pepe=new Profesional(universidadEstudiada=uniHurlingham,tipoProfesional=pepeLibre)
+  test " no hay empleado que estudió en sanmartin  " {
+    assert.notThat(unaEmpresa.cuantosEstudiaronEnLaUniversidad(uniSanMartin)>0)
+  }
+  test"rocio es la empleada profesional mas cara "{
+    assert.that(unaEmpresa.profesionalesCaros().contains(rocio))
+  }
+  test"las universidades formadoras son rosario, corrientes, y hurlingham"{
+    console.println(unaEmpresa.universidadesFormadoras())
+    const universidadesAAsistir=[uniRosario,uniCorrientes,uniHurlingham]
+    assert.that(unaEmpresa.universidadesFormadoras().all({u => universidadesAAsistir.contains(u)}))
+  }
 }
+
