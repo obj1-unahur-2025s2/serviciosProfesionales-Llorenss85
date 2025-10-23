@@ -1,7 +1,7 @@
 import tipoProfesional.*
 class Profesional {
   var universidadEstudiada
-  var tipoProfesional
+  const tipoProfesional
   method asignarUniversidad(unaUniversidad) {
     universidadEstudiada=unaUniversidad
   }
